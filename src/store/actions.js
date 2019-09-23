@@ -36,6 +36,7 @@ function receivePosts(subreddit, json) {
 }
 
 function fetchPosts(subreddit) {
+  console.log(subreddit);
   return dispatch => {
     dispatch(requestPosts(subreddit));
     return fetch(`https://www.reddit.com/best.json?limit=10`)
@@ -43,6 +44,8 @@ function fetchPosts(subreddit) {
       .then(json => dispatch(receivePosts(subreddit, json)));
   };
 }
+
+// function fetchDetailPost()
 
 function shouldFetchPosts(state, subreddit) {
   const posts = state.postsBySubreddit[subreddit];

@@ -17,7 +17,6 @@ class AsyncApp extends Component {
 
   componentDidMount() {
     this.getData();
-    setInterval(this.getData, 5000);
   }
 
   componentDidUpdate(prevProps) {
