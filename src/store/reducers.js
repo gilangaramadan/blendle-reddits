@@ -1,55 +1,47 @@
-import { combineReducers } from "redux";
+// import { combineReducers } from "redux";
 import {
-  INVALIDATE_SUBREDDIT,
-  REQUEST_POSTS,
+  FETCH_DATA_PENDING,
+  FETCH_DATA_ERROR,
   RECEIVE_POSTS
 } from "./actions";
 
 
-function posts(
+function dataReducer(
   state = {
-    isFetching: false,
-    didInvalidate: false,
-    items: []
+    pending: false,
+    posts: [],
+    error: null,
+    detail: []
   },
   action
 ) {
   switch (action.type) {
-    case INVALIDATE_SUBREDDIT:
-      return Object.assign({}, state, {
-        didInvalidate: true
-      });
-    case REQUEST_POSTS:
-      return Object.assign({}, state, {
-        isFetching: true,
-        didInvalidate: false
-      });
+    case FETCH_DATA_PENDING:
+      return {
+        ...state,
+        pending: true
+      }
     case RECEIVE_POSTS:
-      return Object.assign({}, state, {
-        isFetching: false,
-        didInvalidate: false,
-        items: action.posts,
-      });
+      return {
+        ...state,
+        pending: false,
+        items: action.payload
+      }
+    case FETCH_DATA_ERROR:
+      return {
+        ...state,
+        pending: false,
+        items: action.error
+      }
     default:
       return state;
   }
 }
 
-function bestSubredditPost(state = {}, action) {
-  switch (action.type) {
-    case INVALIDATE_SUBREDDIT:
-    case RECEIVE_POSTS:
-    case REQUEST_POSTS:
-      return Object.assign({}, state, {
-        [action]: posts(state, action)
-      });
-    default:
-      return state;
-  }
-}
+export const getPosts = state => state.posts;
+export const getPostsPending = state => state.pending;
+export const getPostsError = state => state.error;
 
-const rootReducer = combineReducers({
-  bestSubredditPost
-});
+const rootReducer = dataReducer;
 
 export default rootReducer;

@@ -1,77 +1,62 @@
 import fetch from "cross-fetch";
 
-export const REQUEST_POSTS = "REQUEST_POSTS";
+export const FETCH_DATA_PENDING = "FETCH_DATA_PENDING";
+export const FETCH_DATA_ERROR = "FETCH_DATA_ERROR";
 export const RECEIVE_POSTS = "RECEIVE_POSTS";
-export const REQUEST_DETAIL = "REQUEST_DETAIL";
-export const RECEIVE_DETAIL = "RECEIVE_DETAIL";
 
-export const INVALIDATE_SUBREDDIT = "INVALIDATE_SUBREDDIT";
-
-export function invalidateSubreddit() {
+function fetchDataPending() {
   return {
-    type: INVALIDATE_SUBREDDIT
+    type: FETCH_DATA_PENDING
   };
 }
 
-function requestPosts() {
+function fetchDataError(error) {
   return {
-    type: REQUEST_POSTS
+    type: FETCH_DATA_ERROR,
+    error
   };
 }
 
-function requestDetail() {
-  return {
-    type: REQUEST_DETAIL
-  };
-}
-
-function receivePosts(json) {
+function receivePosts(payload) {
   return {
     type: RECEIVE_POSTS,
-    posts: json.data.children.map(child => child.data)
+    payload : payload.data.children.map(child => child.data)
+
   };
 }
 
-function receiveDetail(json) {
-  return {
-    type: RECEIVE_DETAIL,
-    posts: json.data.children.map(child => child.data)
-  };
-}
-
-function fetchPosts() {
+export function fetchPosts() {
   return dispatch => {
-    dispatch(requestPosts());
+    dispatch(fetchDataPending());
     return fetch(`https://www.reddit.com/best.json?limit=10`)
-      .then(response => response.json())
-      .then(json => dispatch(receivePosts(json)));
+    .then(res => res.json())
+    .then(res => {
+        if(res.error) {
+            throw(res.error);
+        }
+        dispatch(receivePosts(res));
+        return res;
+    })
+    .catch(error => {
+        dispatch(fetchDataError(error));
+    })
   };
 }
 
-function fetchDetail(subreddit) {
-  return dispatch => {
-    dispatch(requestDetail());
-    return fetch(`https://www.reddit.com/r/${subreddit}/about.json`)
-      .then(response => response.json())
-      .then(json => dispatch(receiveDetail(json)))
-  }
-}
-
-function shouldFetchPosts(state, subreddit) {
-  const posts = state.bestSubredditPost[subreddit];
-  if (!posts) {
-    return true;
-  } else if (posts.isFetching) {
-    return false;
-  } else {
-    return posts.didInvalidate;
-  }
-}
-
-export function fetchPostsIfNeeded() {
-  return (dispatch, getState) => {
-    if (shouldFetchPosts(getState())) {
-      return dispatch(fetchPosts());
-    }
-  };
-}
+// export function fetchDetail(subreddit) {
+//   return dispatch => {
+//     dispatch(fetchDataPending());
+//     return fetch(`https://www.reddit.com/r/${subreddit}/about.json`)
+//     .then(res => res.json())
+//     .then(res => {
+//         if(res.error) {
+//             throw(res.error);
+//         }
+//         dispatch(receiveDetail(res));
+//         return res;
+//     })
+//     .catch(error => {
+//         dispatch(fetchDataError(error));
+//     })
+//   }
+// }
