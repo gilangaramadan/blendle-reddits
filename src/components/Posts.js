@@ -9,7 +9,7 @@ export default class Posts extends Component {
     };
 
     return (
-      <div>
+      <div className="posts">
         {this.props.posts.map((post, i) => (
           <Link to={{ pathname: "/detail", detail: { post } }} key={i}>
             <div className="card">

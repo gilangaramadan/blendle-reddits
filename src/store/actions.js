@@ -20,8 +20,7 @@ function fetchDataError(error) {
 function receivePosts(payload) {
   return {
     type: RECEIVE_POSTS,
-    payload : payload.data.children.map(child => child.data)
-
+    payload: payload.data.children.map(child => child.data)
   };
 }
 
@@ -29,17 +28,17 @@ export function fetchPosts() {
   return dispatch => {
     dispatch(fetchDataPending());
     return fetch(`https://www.reddit.com/best.json?limit=10`)
-    .then(res => res.json())
-    .then(res => {
-        if(res.error) {
-            throw(res.error);
+      .then(res => res.json())
+      .then(res => {
+        if (res.error) {
+          throw res.error;
         }
         dispatch(receivePosts(res));
         return res;
-    })
-    .catch(error => {
+      })
+      .catch(error => {
         dispatch(fetchDataError(error));
-    })
+      });
   };
 }
 

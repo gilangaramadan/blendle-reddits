@@ -65,24 +65,30 @@ $wgh-bold: 700;
   }
 }
 
-.card {
-  padding: 28px 24px;
-  margin-bottom: 24px;
-  font-weight: $wgh-bold;
-  border-radius: 5px;
-  background-color: #fff;
-  border: 1px solid $grey-200;
-  box-sizing: border-box;
-  .title {
-    font-size: 24px;
-    margin-bottom: 15px;
+.posts {
+  a {
+    color: $blue-700;
+    text-decoration: none;
   }
-  .reddit-user {
-    color: $blue-400;
-    font-size: 18px;
-    span.score {
-      color: $grey-500;
-      font-weight: normal;
+  .card {
+    padding: 28px 24px;
+    margin-bottom: 24px;
+    font-weight: $wgh-bold;
+    border-radius: 5px;
+    background-color: #fff;
+    border: 1px solid $grey-200;
+    box-sizing: border-box;
+    .title {
+      font-size: 24px;
+      margin-bottom: 15px;
+    }
+    .reddit-user {
+      color: $blue-400;
+      font-size: 18px;
+      span.score {
+        color: $grey-500;
+        font-weight: normal;
+      }
     }
   }
 }
