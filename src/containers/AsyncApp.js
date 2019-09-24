@@ -2,39 +2,20 @@ import React, { Component } from "react";
 import PropTypes from "prop-types";
 import { connect } from "react-redux";
 import {
-  selectSubreddit,
   fetchPostsIfNeeded,
   invalidateSubreddit
 } from "../store/actions";
 import Posts from "../components/Posts";
 
 class AsyncApp extends Component {
-  constructor(props) {
-    super(props);
-    this.handleChange = this.handleChange.bind(this);
-    this.getData = this.getData.bind(this);
-  }
+  // constructor(props) {
+  //   super(props);
+  // }
 
   componentDidMount() {
-    this.getData();
-  }
-
-  componentDidUpdate(prevProps) {
-    if (this.props.selectedSubreddit !== prevProps.selectedSubreddit) {
-      const { dispatch, selectedSubreddit } = this.props;
-      dispatch(fetchPostsIfNeeded(selectedSubreddit));
-    }
-  }
-
-  getData() {
-    const { dispatch, selectedSubreddit } = this.props;
-    dispatch(invalidateSubreddit(selectedSubreddit));
-    dispatch(fetchPostsIfNeeded(selectedSubreddit));
-  }
-
-  handleChange(nextSubreddit) {
-    this.props.dispatch(selectSubreddit(nextSubreddit));
-    this.props.dispatch(fetchPostsIfNeeded(nextSubreddit));
+    const { dispatch } = this.props;
+    dispatch(invalidateSubreddit());
+    dispatch(fetchPostsIfNeeded());
   }
 
   render() {
@@ -62,7 +43,6 @@ class AsyncApp extends Component {
 }
 
 AsyncApp.propTypes = {
-  selectedSubreddit: PropTypes.string.isRequired,
   posts: PropTypes.array.isRequired,
   isFetching: PropTypes.bool.isRequired,
   lastUpdated: PropTypes.number,
@@ -70,16 +50,12 @@ AsyncApp.propTypes = {
 };
 
 function mapStateToProps(state) {
-  const { selectedSubreddit, postsBySubreddit } = state;
-  const { isFetching, lastUpdated, items: posts } = postsBySubreddit[
-    selectedSubreddit
-  ] || {
+  const { isFetching, lastUpdated, items: posts } =  {
     isFetching: true,
     items: []
   };
 
   return {
-    selectedSubreddit,
     posts,
     isFetching,
     lastUpdated

@@ -2,53 +2,63 @@ import fetch from "cross-fetch";
 
 export const REQUEST_POSTS = "REQUEST_POSTS";
 export const RECEIVE_POSTS = "RECEIVE_POSTS";
-export const SELECT_SUBREDDIT = "SELECT_SUBREDDIT";
+export const REQUEST_DETAIL = "REQUEST_DETAIL";
+export const RECEIVE_DETAIL = "RECEIVE_DETAIL";
+
 export const INVALIDATE_SUBREDDIT = "INVALIDATE_SUBREDDIT";
 
-export function selectSubreddit(subreddit) {
+export function invalidateSubreddit() {
   return {
-    type: SELECT_SUBREDDIT,
-    subreddit
+    type: INVALIDATE_SUBREDDIT
   };
 }
 
-export function invalidateSubreddit(subreddit) {
+function requestPosts() {
   return {
-    type: INVALIDATE_SUBREDDIT,
-    subreddit
+    type: REQUEST_POSTS
   };
 }
 
-function requestPosts(subreddit) {
+function requestDetail() {
   return {
-    type: REQUEST_POSTS,
-    subreddit
+    type: REQUEST_DETAIL
   };
 }
 
-function receivePosts(subreddit, json) {
+function receivePosts(json) {
   return {
     type: RECEIVE_POSTS,
-    subreddit,
-    posts: json.data.children.map(child => child.data),
-    receivedAt: Date.now()
+    posts: json.data.children.map(child => child.data)
   };
 }
 
-function fetchPosts(subreddit) {
-  console.log(subreddit);
+function receiveDetail(json) {
+  return {
+    type: RECEIVE_DETAIL,
+    posts: json.data.children.map(child => child.data)
+  };
+}
+
+function fetchPosts() {
   return dispatch => {
-    dispatch(requestPosts(subreddit));
+    dispatch(requestPosts());
     return fetch(`https://www.reddit.com/best.json?limit=10`)
       .then(response => response.json())
-      .then(json => dispatch(receivePosts(subreddit, json)));
+      .then(json => dispatch(receivePosts(json)));
   };
 }
 
-// function fetchDetailPost()
+function fetchDetail(subreddit) {
+  return dispatch => {
+    dispatch(requestDetail());
+    return fetch(`https://www.reddit.com/r/${subreddit}/about.json`)
+      .then(response => response.json())
+      .then(json => dispatch(receiveDetail(json)))
+  }
+}
 
 function shouldFetchPosts(state, subreddit) {
-  const posts = state.postsBySubreddit[subreddit];
+  const posts = state.bestSubredditPost[subreddit];
   if (!posts) {
     return true;
   } else if (posts.isFetching) {
@@ -58,10 +68,10 @@ function shouldFetchPosts(state, subreddit) {
   }
 }
 
-export function fetchPostsIfNeeded(subreddit) {
+export function fetchPostsIfNeeded() {
   return (dispatch, getState) => {
-    if (shouldFetchPosts(getState(), subreddit)) {
-      return dispatch(fetchPosts(subreddit));
+    if (shouldFetchPosts(getState())) {
+      return dispatch(fetchPosts());
     }
   };
 }

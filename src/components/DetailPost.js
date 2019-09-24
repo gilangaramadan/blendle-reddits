@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 export default class DetailPost extends Component {
   render() {
-    const { match, location } = this.props;
+    const { location } = this.props;
     const detail = location.detail.post;
     return (
       <div>
