@@ -13,9 +13,15 @@ export default class Root extends Component {
     return (
       <Provider store={store}>
         <Router>
-          <Route exact path="/" component={AsyncApp} />
-          <Route path="/detail" component={DetailPost} />
-          <Redirect to="/" />
+          <div className="row">
+            <div className="col-sm-offset-2 col-sm-8 col-xs-12">
+              <div className="box">
+                <Route exact path="/" component={AsyncApp} />
+                <Route path="/detail" component={DetailPost} />
+                <Redirect to="/" />
+              </div>
+            </div>
+          </div>
         </Router>
       </Provider>
     );

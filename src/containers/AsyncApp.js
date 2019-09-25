@@ -27,28 +27,22 @@ class AsyncApp extends Component {
   render() {
     const { posts, error, pending } = this.props;
     return (
-      <div className="row">
-        <div className="col-sm-offset-2 col-sm-8 col-xs-12">
-          <div className="box">
-            <div className="header">
-              <h1>Home</h1>
-              <small>Top 10 posts</small>
-            </div>
-            {this.shouldComponentRender() && posts.length === 0 && (
-              <h2>Loading...</h2>
-            )}
-            {!this.shouldComponentRender() && posts.length === 0 && (
-              <h2>Empty.</h2>
-            )}
-            {posts.length > 0 && (
-              <div style={{ opacity: pending ? 0.5 : 1 }}>
-                {error && <span className="">{error}</span>}
-                <Posts posts={posts} />
-              </div>
-            )}
-          </div>
+      <React.Fragment>
+        <div className="header home">
+          <h1>Home</h1>
+          <small>Top 10 posts</small>
         </div>
-      </div>
+        {this.shouldComponentRender() && posts.length === 0 && (
+          <h1>Loading...</h1>
+        )}
+        {!this.shouldComponentRender() && posts.length === 0 && <h1>Empty.</h1>}
+        {posts.length > 0 && (
+          <div style={{ opacity: pending ? 0.5 : 1 }}>
+            {error && <span className="">{error}</span>}
+            <Posts posts={posts} />
+          </div>
+        )}
+      </React.Fragment>
     );
   }
 }

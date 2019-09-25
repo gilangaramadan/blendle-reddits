@@ -6,25 +6,66 @@ import { bindActionCreators } from "redux";
 import { fetchDetail } from "../store/actions";
 
 class DetailPost extends Component {
-  // constructor(props) {
-  //   super(props);
-  // }
+  constructor(props) {
+    super(props);
+    this.shouldComponentRender = this.shouldComponentRender.bind(this);
+  }
+
   componentDidMount() {
     console.log(this.props);
     const { fetchDetail, location } = this.props;
     fetchDetail(location.subreddit);
   }
 
+  shouldComponentRender() {
+    const { pending } = this.props;
+    if (pending === false) return false;
+    // more tests
+    return true;
+  }
+
+  isEmpty(obj) {
+    for (let key in obj) {
+      if (obj.hasOwnProperty(key)) return false;
+    }
+    return true;
+  }
+
   render() {
     const { detail, error, pending } = this.props;
+    const formatNumber = num => {
+      return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
+    };
     return (
-      <div>
-        <p>{detail.display_name_prefixed}</p>
-        <p>{detail.title}</p>
-        <p>{detail.public_description}</p>
-        <p>{detail.subscribers}</p>
-        <Link to="/">Back</Link>
-      </div>
+      <React.Fragment>
+        {this.shouldComponentRender() && this.isEmpty(detail) && (
+          <h1>Loading...</h1>
+        )}
+        {!this.isEmpty(detail) && (
+          <div style={{ opacity: pending ? 0.5 : 1, marginTop: "64px" }}>
+            <Link to="/" className="back-to-home">
+              Home
+            </Link>
+            {error && <span className="">{error}</span>}
+            <div className="header detail">
+              <h1>{detail.display_name_prefixed}</h1>
+              <small>Subreddit details</small>
+            </div>
+            <div className="detail-content">
+              <h5>Title</h5>
+              <span>{detail.title}</span>
+            </div>
+            <div className="detail-content">
+              <h5>Public description</h5>
+              <span>{detail.public_description}</span>
+            </div>
+            <div className="detail-content">
+              <h5>Subscriber count</h5>
+              <span>{formatNumber(detail.subscribers)}</span>
+            </div>
+          </div>
+        )}
+      </React.Fragment>
     );
   }
 }

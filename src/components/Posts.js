@@ -4,7 +4,7 @@ import PropTypes from "prop-types";
 
 export default class Posts extends Component {
   render() {
-    let formatNumber = num => {
+    const formatNumber = num => {
       return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
     };
 
