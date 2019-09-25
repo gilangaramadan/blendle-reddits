@@ -32,16 +32,16 @@ class App extends Component {
           <h1>Home</h1>
           <small>Top 10 posts</small>
         </div>
-        {this.shouldComponentRender() && posts.length === 0 && (
-          <h1>Loading...</h1>
-        )}
-        {!this.shouldComponentRender() && posts.length === 0 && <h1>Empty.</h1>}
-        {posts.length > 0 && (
-          <div style={{ opacity: pending ? 0.5 : 1 }}>
-            {error && <span className="">{error}</span>}
-            <Posts posts={posts} />
-          </div>
-        )}
+        <div style={{ opacity: pending ? 0.5 : 1 }}>
+          {this.shouldComponentRender() && posts.length === 0 && (
+            <span className="text-helper">Loading...</span>
+          )}
+          {!this.shouldComponentRender() && posts.length === 0 && (
+            <span className="text-helper">Empty.</span>
+          )}
+          {posts.length > 0 && <Posts posts={posts} />}
+          {error && <span className="text-helper error">{error}</span>}
+        </div>
       </React.Fragment>
     );
   }

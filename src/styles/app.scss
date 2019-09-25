@@ -67,6 +67,7 @@ $wgh-bold: 700;
   }
   &.detail {
     margin: 24px 0 75px 0;
+    padding: 0 24px;
   }
 }
 
@@ -98,7 +99,19 @@ $wgh-bold: 700;
   }
 }
 
+@media only screen and (max-width: 47em) {
+  .posts {
+    .card {
+      margin-bottom: 0;
+      border-radius: 0;
+      border: 0;
+      border-top: 1px solid #e2e7eb;
+    }
+  }
+}
+
 .back-to-home {
+  padding: 0 24px;
   font-weight: $wgh-bold;
   color: $blue-400;
   text-decoration: none;
@@ -122,9 +135,17 @@ $wgh-bold: 700;
 .detail-content {
   font-size: 20px;
   margin-bottom: 43px;
+  padding: 0 24px;
   h5 {
     font-weight: $wgh-bold;
     font-size: 26px;
     margin: 0 0 15px 0;
+  }
+}
+
+.text-helper {
+  padding: 0 24px;
+  &.error {
+    color: red;
   }
 }

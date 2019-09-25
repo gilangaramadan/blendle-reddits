@@ -37,35 +37,39 @@ class DetailPost extends Component {
       return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
     };
     return (
-      <React.Fragment>
-        {this.shouldComponentRender() && this.isEmpty(detail) && (
-          <h1>Loading...</h1>
-        )}
-        {!this.isEmpty(detail) && (
-          <div style={{ opacity: pending ? 0.5 : 1, marginTop: "64px" }}>
-            <Link to="/" className="back-to-home">
-              Home
-            </Link>
-            {error && <span className="">{error}</span>}
-            <div className="header detail">
-              <h1>{detail.display_name_prefixed}</h1>
-              <small>Subreddit details</small>
-            </div>
-            <div className="detail-content">
-              <h5>Title</h5>
-              <span>{detail.title}</span>
-            </div>
-            <div className="detail-content">
-              <h5>Public description</h5>
-              <span>{detail.public_description}</span>
-            </div>
-            <div className="detail-content">
-              <h5>Subscriber count</h5>
-              <span>{formatNumber(detail.subscribers)}</span>
-            </div>
-          </div>
-        )}
-      </React.Fragment>
+      <div style={{ opacity: pending ? 0.5 : 1, marginTop: "64px" }}>
+        <Link to="/" className="back-to-home">
+          Home
+        </Link>
+        <div>
+          {this.shouldComponentRender() && this.isEmpty(detail) && (
+            <span className="text-helper" style={{ marginTop: "24px" }}>
+              Loading...
+            </span>
+          )}
+          {!this.isEmpty(detail) && (
+            <React.Fragment>
+              <div className="header detail">
+                <h1>{detail.display_name_prefixed}</h1>
+                <small>Subreddit details</small>
+              </div>
+              <div className="detail-content">
+                <h5>Title</h5>
+                <span>{detail.title}</span>
+              </div>
+              <div className="detail-content">
+                <h5>Public description</h5>
+                <span>{detail.public_description}</span>
+              </div>
+              <div className="detail-content">
+                <h5>Subscriber count</h5>
+                <span>{formatNumber(detail.subscribers)}</span>
+              </div>
+            </React.Fragment>
+          )}
+          {error && <span className="text-helper error">{error}</span>}
+        </div>
+      </div>
     );
   }
 }
