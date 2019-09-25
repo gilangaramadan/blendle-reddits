@@ -1,67 +1,69 @@
 import fetch from "cross-fetch";
 
-export const REQUEST_POSTS = "REQUEST_POSTS";
+export const FETCH_DATA_PENDING = "FETCH_DATA_PENDING";
+export const FETCH_DATA_ERROR = "FETCH_DATA_ERROR";
 export const RECEIVE_POSTS = "RECEIVE_POSTS";
-export const SELECT_SUBREDDIT = "SELECT_SUBREDDIT";
-export const INVALIDATE_SUBREDDIT = "INVALIDATE_SUBREDDIT";
+export const RECEIVE_SUBREDDIT_DETAIL = "RECEIVE_SUBREDDIT_DETAIL";
 
-export function selectSubreddit(subreddit) {
+function fetchDataPending() {
   return {
-    type: SELECT_SUBREDDIT,
-    subreddit
+    type: FETCH_DATA_PENDING
   };
 }
 
-export function invalidateSubreddit(subreddit) {
+function fetchDataError(error) {
   return {
-    type: INVALIDATE_SUBREDDIT,
-    subreddit
+    type: FETCH_DATA_ERROR,
+    error
   };
 }
 
-function requestPosts(subreddit) {
-  return {
-    type: REQUEST_POSTS,
-    subreddit
-  };
-}
-
-function receivePosts(subreddit, json) {
+function receivePosts(payload) {
   return {
     type: RECEIVE_POSTS,
-    subreddit,
-    posts: json.data.children.map(child => child.data),
-    receivedAt: Date.now()
+    payload: payload.data.children.map(child => child.data)
   };
 }
 
-function fetchPosts(subreddit) {
-  console.log(subreddit);
+function receiveSubredditDetail(payload) {
+  return {
+    type: RECEIVE_SUBREDDIT_DETAIL,
+    payload: payload.data
+  };
+}
+
+export function fetchPosts() {
   return dispatch => {
-    dispatch(requestPosts(subreddit));
+    dispatch(fetchDataPending());
     return fetch(`https://www.reddit.com/best.json?limit=10`)
-      .then(response => response.json())
-      .then(json => dispatch(receivePosts(subreddit, json)));
+      .then(res => res.json())
+      .then(res => {
+        if (res.error) {
+          throw res.error;
+        }
+        dispatch(receivePosts(res));
+        return res;
+      })
+      .catch(error => {
+        dispatch(fetchDataError(error));
+      });
   };
 }
 
-// function fetchDetailPost()
-
-function shouldFetchPosts(state, subreddit) {
-  const posts = state.postsBySubreddit[subreddit];
-  if (!posts) {
-    return true;
-  } else if (posts.isFetching) {
-    return false;
-  } else {
-    return posts.didInvalidate;
-  }
-}
-
-export function fetchPostsIfNeeded(subreddit) {
-  return (dispatch, getState) => {
-    if (shouldFetchPosts(getState(), subreddit)) {
-      return dispatch(fetchPosts(subreddit));
-    }
+export function fetchDetail(subreddit) {
+  return dispatch => {
+    dispatch(fetchDataPending());
+    return fetch(`https://www.reddit.com/r/${subreddit}/about.json`)
+      .then(res => res.json())
+      .then(res => {
+        if (res.error) {
+          throw res.error;
+        }
+        dispatch(receiveSubredditDetail(res));
+        return res;
+      })
+      .catch(error => {
+        dispatch(fetchDataError(error));
+      });
   };
 }

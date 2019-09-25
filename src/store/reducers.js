@@ -1,66 +1,51 @@
-import { combineReducers } from "redux";
+// import { combineReducers } from "redux";
 import {
-  SELECT_SUBREDDIT,
-  INVALIDATE_SUBREDDIT,
-  REQUEST_POSTS,
-  RECEIVE_POSTS
+  FETCH_DATA_PENDING,
+  FETCH_DATA_ERROR,
+  RECEIVE_POSTS,
+  RECEIVE_SUBREDDIT_DETAIL
 } from "./actions";
 
-function selectedSubreddit(state = "true", action) {
-  switch (action.type) {
-    case SELECT_SUBREDDIT:
-      return action.subreddit;
-    default:
-      return state;
-  }
-}
+const initialState = {
+  posts: [],
+  detail: {},
+  pending: false,
+  error: null
+};
 
-function posts(
-  state = {
-    isFetching: false,
-    didInvalidate: false,
-    items: []
-  },
-  action
-) {
+function rootReducer(state = initialState, action) {
   switch (action.type) {
-    case INVALIDATE_SUBREDDIT:
-      return Object.assign({}, state, {
-        didInvalidate: true
-      });
-    case REQUEST_POSTS:
-      return Object.assign({}, state, {
-        isFetching: true,
-        didInvalidate: false
-      });
+    case FETCH_DATA_PENDING:
+      return {
+        ...state,
+        pending: true
+      };
     case RECEIVE_POSTS:
-      return Object.assign({}, state, {
-        isFetching: false,
-        didInvalidate: false,
-        items: action.posts,
-        lastUpdated: action.receivedAt
-      });
+      return {
+        ...state,
+        pending: false,
+        posts: action.payload
+      };
+    case RECEIVE_SUBREDDIT_DETAIL:
+      return {
+        ...state,
+        pending: false,
+        detail: action.payload
+      };
+    case FETCH_DATA_ERROR:
+      return {
+        ...state,
+        pending: false,
+        posts: action.error
+      };
     default:
       return state;
   }
 }
 
-function postsBySubreddit(state = {}, action) {
-  switch (action.type) {
-    case INVALIDATE_SUBREDDIT:
-    case RECEIVE_POSTS:
-    case REQUEST_POSTS:
-      return Object.assign({}, state, {
-        [action.subreddit]: posts(state[action.subreddit], action)
-      });
-    default:
-      return state;
-  }
-}
-
-const rootReducer = combineReducers({
-  postsBySubreddit,
-  selectedSubreddit
-});
+export const getPosts = state => state.posts;
+export const getDetail = state => state.detail;
+export const getPostsPending = state => state.pending;
+export const getPostsError = state => state.error;
 
 export default rootReducer;

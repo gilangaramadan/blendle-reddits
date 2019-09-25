@@ -4,14 +4,14 @@ import PropTypes from "prop-types";
 
 export default class Posts extends Component {
   render() {
-    let formatNumber = num => {
+    const formatNumber = num => {
       return num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, "$1.");
     };
 
     return (
-      <div>
+      <div className="posts">
         {this.props.posts.map((post, i) => (
-          <Link to={{ pathname: "/detail", detail: { post } }} key={i}>
+          <Link to={{ pathname: "/detail", subreddit: post.subreddit }} key={i}>
             <div className="card">
               <div className="title">{post.title}</div>
               <div className="reddit-user">
