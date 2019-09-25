@@ -67,7 +67,7 @@ const mapStateToProps = state => ({
 const mapDispatchToProps = dispatch =>
   bindActionCreators(
     {
-      fetchPosts: fetchPosts
+      fetchPosts
     },
     dispatch
   );

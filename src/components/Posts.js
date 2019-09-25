@@ -11,7 +11,7 @@ export default class Posts extends Component {
     return (
       <div className="posts">
         {this.props.posts.map((post, i) => (
-          <Link to={{ pathname: "/detail", detail: { post } }} key={i}>
+          <Link to={{ pathname: "/detail", subreddit: post.subreddit }} key={i}>
             <div className="card">
               <div className="title">{post.title}</div>
               <div className="reddit-user">

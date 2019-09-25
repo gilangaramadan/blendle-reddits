@@ -1,8 +1,14 @@
 // import { combineReducers } from "redux";
-import { FETCH_DATA_PENDING, FETCH_DATA_ERROR, RECEIVE_POSTS } from "./actions";
+import {
+  FETCH_DATA_PENDING,
+  FETCH_DATA_ERROR,
+  RECEIVE_POSTS,
+  RECEIVE_SUBREDDIT_DETAIL
+} from "./actions";
 
 const initialState = {
   posts: [],
+  detail: {},
   pending: false,
   error: null
 };
@@ -20,6 +26,12 @@ function rootReducer(state = initialState, action) {
         pending: false,
         posts: action.payload
       };
+    case RECEIVE_SUBREDDIT_DETAIL:
+      return {
+        ...state,
+        pending: false,
+        detail: action.payload
+      };
     case FETCH_DATA_ERROR:
       return {
         ...state,
@@ -32,6 +44,7 @@ function rootReducer(state = initialState, action) {
 }
 
 export const getPosts = state => state.posts;
+export const getDetail = state => state.detail;
 export const getPostsPending = state => state.pending;
 export const getPostsError = state => state.error;
 
