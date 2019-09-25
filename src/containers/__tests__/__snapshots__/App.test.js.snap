@@ -1,0 +1,19 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`App renders without crashing given the required props 1`] = `
+<Fragment>
+  <div
+    className="header home"
+  >
+    <h1>
+      Home
+    </h1>
+    <small>
+      Top 10 posts
+    </small>
+  </div>
+  <h1>
+    Empty.
+  </h1>
+</Fragment>
+`;

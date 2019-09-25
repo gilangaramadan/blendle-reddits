@@ -36,16 +36,11 @@ function rootReducer(state = initialState, action) {
       return {
         ...state,
         pending: false,
-        posts: action.error
+        error: action.error
       };
     default:
       return state;
   }
 }
-
-export const getPosts = state => state.posts;
-export const getDetail = state => state.detail;
-export const getPostsPending = state => state.pending;
-export const getPostsError = state => state.error;
 
 export default rootReducer;

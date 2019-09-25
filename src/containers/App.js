@@ -6,7 +6,7 @@ import { fetchPosts } from "../store/actions";
 
 import Posts from "../components/Posts";
 
-class AsyncApp extends Component {
+class App extends Component {
   constructor(props) {
     super(props);
     this.shouldComponentRender = this.shouldComponentRender.bind(this);
@@ -47,9 +47,10 @@ class AsyncApp extends Component {
   }
 }
 
-AsyncApp.propTypes = {
+App.propTypes = {
   posts: PropTypes.array.isRequired,
-  pending: PropTypes.bool.isRequired
+  pending: PropTypes.bool.isRequired,
+  error: PropTypes.object
 };
 
 const mapStateToProps = state => ({
@@ -69,4 +70,6 @@ const mapDispatchToProps = dispatch =>
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(AsyncApp);
+)(App);
+
+export { App };
